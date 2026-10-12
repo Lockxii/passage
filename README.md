@@ -14,6 +14,23 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## Mobile screenshots
+
+Phone-format development captures of the French interface, reviewed for personal information. These show public places and example screens, with no personal account details or uploaded photos. Some layouts predate the latest source changes.
+
+<table>
+  <tr>
+    <td align="center" width="50%"><strong>Map-first home</strong><br><a href="docs/screenshots/map.jpg"><img src="docs/screenshots/map.jpg" width="260" alt="Lille street map, destination search and bottom navigation" /></a></td>
+    <td align="center" width="50%"><strong>Journey alternatives</strong><br><a href="docs/screenshots/journeys.jpg"><img src="docs/screenshots/journeys.jpg" width="260" alt="Example journey between public stations, comparing metro and walking" /></a></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><strong>Step-by-step guidance</strong><br><a href="docs/screenshots/guidance.jpg"><img src="docs/screenshots/guidance.jpg" width="260" alt="Walking instruction, next turn, progress and stop control" /></a></td>
+    <td align="center" width="50%"><strong>Report composer</strong><br><a href="docs/screenshots/report.jpg"><img src="docs/screenshots/report.jpg" width="260" alt="Unsubmitted report with public stop, transport mode and optional photo controls; no photo attached" /></a></td>
+  </tr>
+</table>
+
+Click a screenshot to view it at full size. Map attribution is preserved.
+
 ## What is implemented
 
 | Area | Capabilities |
