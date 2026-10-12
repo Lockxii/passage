@@ -1,6 +1,6 @@
 # Two-week improvement plan
 
-One focused improvement per day, October 13–26, 2026, at 10:00 Europe/Paris. This is a planned backlog, not a claim of completed functionality. The automation works in the existing project and publishes source changes only. No hosted application or APK release is planned.
+One focused improvement per day, October 13–26, 2026, at 10:00 Europe/Paris. This is a planned backlog, not a claim of completed functionality. The automation uses a fresh temporary clone and publishes source changes only. No hosted application or APK release is planned.
 
 ## Delivery rules
 
@@ -9,6 +9,12 @@ Keep the interface in French and documentation in English. Preserve existing beh
 A browser access restriction currently prevents fresh UI capture in this task. Use only an authorized browser capability if it becomes available; never bypass that restriction. If visual verification or another required dependency is blocked, keep the work local and report the limitation. Resume the same item on the next scheduled run. Do not claim daily delivery regardless of failures.
 
 Start servers only for the required checks and stop those started by that run. Do not overwrite unrelated changes, commit private data or start paid services. Record completion below only after tests, capture and push succeed. Do not process more than one feature per day or extend work past October 26 to catch up.
+
+## Temporary checkout lifecycle
+
+The original local Passage checkout and deliverables are removed at the owner's request. Each run clones this repository into a dated folder under `C:/Users/conta/Documents/Codex/passage-daily-work/`, creates a daily feature branch, implements and verifies one feature, then merges into an up-to-date `main` and pushes without force. Resume any retained unfinished checkout before starting another feature.
+
+After verifying that the implementation commit is included in remote `main` and no unpublished work remains, stop the run's servers, leave the checkout and delete only that run's validated temporary directory. Keep the checkout if implementation, capture, tests or push fail. Never remove shared tools, other projects or unrelated analyses. GitHub is the durable record of completed work.
 
 ## Backlog
 
