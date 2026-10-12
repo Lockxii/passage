@@ -1,0 +1,7 @@
+{
+  "appId": "fr.passage.mobile",
+  "appName": "Passage",
+  "webDir": "dist/client",
+  "appendUserAgent": " Passage/0.1",
+  "server": { "androidScheme": "https" }
+}

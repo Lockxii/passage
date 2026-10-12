@@ -1,0 +1,5 @@
+import React, {useRef} from 'react';
+export default function SheetHandle({size,onChange}) {
+ const gesture=useRef(null), suppressClick=useRef(false);
+ return <button type="button" className="sheet-handle" aria-label={size==='expanded'?'Réduire la fiche':'Agrandir la fiche'} aria-expanded={size==='expanded'} title="Glisser vers le haut ou le bas" onClick={()=>{if(suppressClick.current){suppressClick.current=false;return;}onChange(size==='expanded'?'normal':'expanded');}} onKeyDown={e=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();onChange(e.key==='ArrowUp'?'expanded':'collapsed');}}} onPointerDown={e=>{if(e.button!==0)return;gesture.current=e.clientY;suppressClick.current=false;e.currentTarget.setPointerCapture(e.pointerId);}} onPointerUp={e=>{if(gesture.current===null)return;const dy=e.clientY-gesture.current;gesture.current=null;if(Math.abs(dy)>30){suppressClick.current=true;onChange(dy<0?(size==='collapsed'?'normal':'expanded'):(size==='expanded'?'normal':'collapsed'));}}} onPointerCancel={()=>{gesture.current=null;}}><span/></button>
+}

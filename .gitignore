@@ -1,0 +1,30 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/public/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+# Private runtime data and local configuration
+data/
+.env
+.env.*
+!.env.example
+*.log
+# Generated public timetable: rebuild using the GTFS import scripts
+resources/*.sqlite*
+# Private working notes, analysis and screenshots
+evidence/
+design-qa.md
+AGENTS.md
+.context/
+.claude/
+.agents/
+.DS_Store
+Thumbs.db

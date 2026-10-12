@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Passage</string>
+    <string name="title_activity_main">Passage</string>
+    <string name="package_name">fr.passage.mobile</string>
+    <string name="custom_url_scheme">fr.passage.mobile</string>
+</resources>

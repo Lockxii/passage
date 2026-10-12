@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {scanConnections,serviceEpoch,parisDate} from '../server/transit-planner.mjs';
+const c=(trip,origin,destination,departure,arrival,extra={})=>({trip,origin,destination,departure,arrival,pickup:1,dropoff:1,seq:1,mode:'bus',routeId:trip,line:trip,headsign:destination,...extra});
+const walk=duration=>({duration,distance:duration});
+const plan=connections=>scanConnections({connections,access:new Map([['a',walk(300)]]),egress:new Map([['z',walk(120)]]),departure:0});
+test('counts five-minute access, waiting, bus and final walk',()=>{const r=plan([c('bus','a','z',360,960)])[0];assert.equal(r.arrival,1080);assert.equal(r.legs[0].duration,300);assert.equal(r.boardings,1)});
+test('cannot catch a bus before walking to its stop',()=>assert.equal(plan([c('early','a','z',290,500)]).length,0));
+test('bus to metro connection includes safe boarding time',()=>{const r=plan([c('bus','a','b',360,600),c('missed','b','z',650,750,{mode:'metro'}),c('metro','b','z',720,900,{mode:'metro'})])[0];assert.equal(r.arrival,1020);assert.equal(r.boardings,2);assert.equal(r.legs[2].trip,'metro')});
+test('stays onboard at stops with boarding and alighting prohibited',()=>{const r=plan([c('bus','a','b',360,600,{dropoff:0}),c('bus','b','z',610,900,{pickup:0,seq:2})])[0];assert.equal(r.arrival,1020);assert.deepEqual(r.legs[1].stops,['a','b','z'])});
+test('reservation-only pickup is not offered',()=>assert.equal(plan([c('bus','a','z',360,600,{pickup:0})]).length,0));
+test('service times handle Paris timezone and DST',()=>{assert.equal(new Date(serviceEpoch('20261012')*1000).toISOString(),'2026-10-11T22:00:00.000Z');assert.equal(new Date(serviceEpoch('20261025')*1000).toISOString(),'2026-10-24T23:00:00.000Z');assert.equal(parisDate(Date.parse('2026-10-11T23:30:00Z')),'20261012')});
+test('Canteleu metro plus L5 includes the platform walk and ranks actual arrival',()=>{const result=scanConnections({departure:0,access:new Map([['CAN',walk(600)],['BUS',walk(30)]]),egress:new Map([['HMA',walk(0)]]),transfers:new Map([['PDP-M',[{to:'PDP-B',duration:150,distance:180}]]]),connections:[c('18','BUS','HMA',120,2500),c('M2','CAN','PDP-M',660,1020,{mode:'metro'}),c('missed-L5','PDP-B','HMA',1100,1600),c('L5','PDP-B','HMA',1320,2100)]});assert.equal(result[0].arrival,2100);assert.deepEqual(result[0].legs.filter(l=>l.kind==='transit').map(l=>l.line),['M2','L5']);});
