@@ -61,4 +61,3 @@ export default function BusDepartures({leg,compact=false}){
  </section>;
 
 }
-
