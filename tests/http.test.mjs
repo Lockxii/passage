@@ -46,6 +46,7 @@ test("HTTP authorization, origin, canonical transit data and community round tri
     403,
   );
   assert.equal((await call("/reports?bbox=bad")).status, 400);
+  assert.equal((await call("/departures?stop=unknown&line=unknown")).status,400);
   assert.equal(
     (
       await call("/route", "POST", {

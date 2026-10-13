@@ -14,6 +14,17 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: nearby departures
+
+Find up to four physical stops/platforms within 800 metres from the home screen, then choose a line to see upcoming departures. Location is requested only when you tap the button and is not stored. Distances are straight-line estimates; refresh your position after moving. Bus, metro and tram schedules are supported; live information appears only when fresh matching SIRI visits exist, otherwise scheduled GTFS times are clearly labelled.
+
+<table><tr>
+<td align="center"><strong>Home shortcut</strong><br><img src="docs/screenshots/nearby-home.jpg" width="260" alt="Mobile home with nearby departure action and existing home/work shortcuts" /></td>
+<td align="center"><strong>Nearby bus platform</strong><br><img src="docs/screenshots/nearby-bus.jpg" width="260" alt="Demonstration at a public Lille square showing bus line selection and scheduled departures" /></td>
+</tr></table>
+
+Captured at 390 × 844 on October 13, 2026. The bus screenshot uses a labelled simulated public location and actual scheduled fallback data, not the user's location or invented live arrivals. See [verification notes](docs/nearby-departures.md).
+
 ## Mobile screenshots
 
 Phone-format development captures of the French interface, reviewed for personal information. These show public places and example screens, with no personal account details or uploaded photos. Some layouts predate the latest source changes.
@@ -44,7 +55,7 @@ Click a screenshot to view it at full size. Map attribution is preserved.
 | Community reports | Stop- and line-based ticket-inspector reports, confirmations, automatic expiry and optional photo attachments. |
 | Interface | Responsive map-first panels, custom controls, cyan accents and keyboard focus states. |
 
-The last requested additions—nearby departures on home, opt-in offline storage, profile avatars, mandatory account login for reporting, and a dedicated disruptions feed—are **not implemented in this snapshot**. Reports currently use anonymous device sessions, with optional account association.
+The remaining requested additions—opt-in offline storage, profile avatars, mandatory account login for reporting, and a dedicated disruptions feed—are **not implemented in this snapshot**. Reports currently use anonymous device sessions, with optional account association.
 
 ## Important limitations
 

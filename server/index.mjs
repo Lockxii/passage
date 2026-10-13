@@ -274,7 +274,7 @@ const server = http.createServer(async (req, res) => {
 
         const stop=url.searchParams.get('stop'),line=url.searchParams.get('line');
 
-        if(!stops.has(stop)||routes.get(line)?.mode!=='bus'||!stops.get(stop).lines.includes(line))throw new ApiError(400,'Arrêt ou ligne de bus invalide.');
+        if(!stops.has(stop)||!routes.has(line)||!stops.get(stop).lines.includes(line))throw new ApiError(400,'Arrêt ou ligne invalide.');
 
         limit(ip+':departures',60,60000);
 

@@ -1,3 +1,4 @@
+import NearbyDepartures from './NearbyDepartures.jsx';
 import HomeFavorites from './HomeFavorites.jsx';
 import {findStops} from './stop-search.js';
 import Account from './Account.jsx';
@@ -1382,6 +1383,8 @@ export function App() {
           <SearchField label="Où allez-vous ?" value={to} onSelect={p=>{changeTo(p);if(p)setView('route');}} transit={transit.stops} routes={routes}/>
 
           <HomeFavorites refresh={modal} onLaunch={launchFavorite} onConfigure={()=>setModal('account')} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} renderDialog={props=><Modal {...props}/>}/>
+
+          <NearbyDepartures stops={transit.stops} routes={routes}/>
 
           {route ? <button className="resume-journey" onClick={()=>setView('route')}><Navigation size={20}/><span><strong>{to?.name}</strong><small>{Math.ceil(route.duration/60)} min · Reprendre l’itinéraire</small></span><ChevronRight size={18}/></button> : null}
 

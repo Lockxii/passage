@@ -1,0 +1,11 @@
+<!doctype html><html lang="fr"><head><base href="/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Passage · démonstration des départs proches</title></head><body><div id="root"></div><script type="module">
+// Local Vite-only QA fixture. A public square, never the user's real location.
+const mode=new URLSearchParams(location.search).get('state');
+Object.defineProperty(navigator,'geolocation',{value:{getCurrentPosition(success,failure){
+ if(mode==='denied')return failure({code:1});
+ const outside=mode==='empty';
+ success({timestamp:Date.now(),coords:{latitude:outside?0:50.6305,longitude:outside?0:3.0604,accuracy:mode==='inaccurate'?800:10}});
+}}});
+await import('/src/main.jsx');
+const badge=document.createElement('div');badge.textContent='DÉMO · POSITION PUBLIQUE SIMULÉE';badge.style.cssText='position:fixed;top:80px;left:16px;z-index:1200;background:white;color:#526775;border-radius:10px;padding:6px 9px;font:10px sans-serif;pointer-events:none';document.body.append(badge);
+</script></body></html>

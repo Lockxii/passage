@@ -8,7 +8,7 @@
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
     "start": "node server/index.mjs",
-    "test": "node --test tests/api.test.mjs tests/http.test.mjs tests/planner.test.mjs tests/guidance.test.mjs tests/realtime.test.mjs tests/photo.test.mjs tests/accounts.test.mjs tests/stop-search.test.mjs tests/live-navigation.test.mjs",
+    "test": "node --test tests/api.test.mjs tests/http.test.mjs tests/planner.test.mjs tests/guidance.test.mjs tests/realtime.test.mjs tests/photo.test.mjs tests/accounts.test.mjs tests/stop-search.test.mjs tests/live-navigation.test.mjs tests/nearby-stops.test.mjs",
     "android": "npm run build && cap sync android",
     "test:sites": "node --test tests/sites-worker.test.mjs"
   },
