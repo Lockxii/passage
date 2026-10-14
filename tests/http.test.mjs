@@ -12,8 +12,7 @@ test("HTTP authorization, origin, canonical transit data and community round tri
     stdio: ["ignore", "pipe", "pipe"],
   });
   t.after(async () => {
-    proc.kill();
-    await new Promise((r) => proc.on("exit", r));
+    if(proc.exitCode===null && proc.signalCode===null){const exited=new Promise(r=>proc.once('exit',r));proc.kill();await exited;}
     rmSync(temp, { recursive: true, force: true });
   });
   await new Promise((resolve, reject) => {
@@ -21,13 +20,14 @@ test("HTTP authorization, origin, canonical transit data and community round tri
     proc.once("error", reject);
     proc.once("exit", (c) => reject(Error("Server exit " + c)));
   });
-  const call = async (path, method = "GET", body, token, origin) => {
+  const call = async (path, method = "GET", body, token, origin, accountToken) => {
     const r = await fetch("http://127.0.0.1:4399/api" + path, {
       method,
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: "Bearer " + token } : {}),
         ...(origin ? { Origin: origin } : {}),
+        ...(accountToken ? { "X-Account-Token":accountToken } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
@@ -96,9 +96,25 @@ test("HTTP authorization, origin, canonical transit data and community round tri
     line: "wrong",
   };
   assert.equal((await call("/reports", "POST", payload, "forged")).status, 401);
-  const created = await call("/reports", "POST", payload, a);
+  for(const accountToken of [undefined,'forged',login.data.token,account.data.token]) {
+    const denied=await call('/reports','POST',{...payload,photo:'invalid-photo'},a,undefined,accountToken);
+    assert.equal(denied.status,401);
+    assert.equal(denied.data.code,'ACCOUNT_REQUIRED');
+  }
+  assert.equal((await call('/reports')).data.reports.length,0);
+  assert.equal((await call('/reports','POST',payload,'forged',undefined,recovered.data.token)).status,401);
+  assert.equal((await call('/reports','POST',{...payload,photo:'invalid-photo'},a,undefined,recovered.data.token)).status,400);
+  const created = await call("/reports", "POST", payload, a,undefined,recovered.data.token);
   assert.equal(created.status, 201);
   const id = created.data.id;
+  assert.ok((await call('/account/workspace','GET',undefined,recovered.data.token)).data.reports.some(r=>r.id===id));
+  const other=await call('/account/register','POST',{...credentials,email:'other@example.org',name:'Other'});
+  assert.equal(other.status,200);
+  const conflict=await call('/reports','POST',payload,a,undefined,other.data.token);
+  assert.equal(conflict.status,409);assert.equal(conflict.data.code,'REPORT_SESSION_CONFLICT');
+  assert.equal((await call('/account/reports/'+id,'DELETE',undefined,other.data.token)).status,404);
+  const publicReports=(await call('/reports')).data.reports;
+  assert.equal(publicReports.length,1);assert.equal(publicReports[0].email,undefined);assert.equal(publicReports[0].account,undefined);
   const report = (await call("/reports", "GET", undefined, b)).data.reports[0];
   assert.equal(report.place, stop.name);
   assert.equal(report.lat, stop.lat);
@@ -124,5 +140,10 @@ test("HTTP authorization, origin, canonical transit data and community round tri
     200,
   );
   assert.equal((await call("/reports")).data.reports.length, 0);
+  const c=(await call('/session','POST',{})).data.token;
+  const another=await call('/reports','POST',payload,c,undefined,recovered.data.token);
+  assert.equal(another.status,201);
+  assert.equal((await call('/account/reports/'+another.data.id,'DELETE',undefined,recovered.data.token)).status,200);
+  assert.equal((await call('/reports')).data.reports.length,0);
   assert.equal((await fetch("http://127.0.0.1:4399/api/reports/"+id+"/photo")).status,404);
 });

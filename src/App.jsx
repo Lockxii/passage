@@ -1149,6 +1149,7 @@ export function App() {
   }
 
   const [reportPhoto,setReportPhoto]=useState(null),[photoBusy,setPhotoBusy]=useState(false);
+  const [reportIntent,setReportIntent]=useState(false);
   function startReport() {
     setReportPhoto(null);setPhotoBusy(false);
 
@@ -1162,13 +1163,15 @@ export function App() {
 
     setStopQuery("");
 
-    setModal("report");
+    const signedIn=!!sessionStorage.getItem('passage-account:'+serverURL);
+    setReportIntent(!signedIn);
+    setModal(signedIn?'report':'report-login');
 
   }
 
   async function publish() {
 
-    if (!chosenStop || !chosenRoute || photoBusy) return;
+    if (!chosenStop || !chosenRoute || photoBusy || busy) return;
 
     setBusy(true);
 
@@ -1197,6 +1200,7 @@ export function App() {
 
       });
 
+      setReportIntent(false);
       setModal(null);
 
       setRefresh((n) => n + 1);
@@ -1208,6 +1212,10 @@ export function App() {
     } catch (e) {
 
       setReportError(e.message);
+      if(e.code==='ACCOUNT_REQUIRED'||e.code==='REPORT_SESSION_CONFLICT') {
+        if(e.code==='ACCOUNT_REQUIRED')sessionStorage.removeItem('passage-account:'+serverURL);
+        setReportIntent(true);setModal('report-login');
+      }
 
     } finally {
 
@@ -1952,6 +1960,10 @@ export function App() {
 
       )}
 
+      {modal === 'report-login' && <Modal title="Partager une info" onClose={()=>{setReportIntent(false);setModal(null);}}>
+        <div className="report-login"><div className="account-avatar"><UserRound size={30}/></div><h2>Un compte pour signaler</h2><p>Connectez-vous ou créez un compte pour publier et retrouver vos signalements.</p><p className="report-login-note">La carte et les signalements restent consultables sans compte.</p>{reportError&&<p className="inline-error" role="alert">{reportError} Votre brouillon reste disponible ici.</p>}<button className="primary account-submit" onClick={()=>setModal('account')}><UserRound size={18}/>Se connecter ou créer un compte</button><button className="account-logout" onClick={()=>{setReportIntent(false);setModal(null);}}>Revenir à la carte</button></div>
+      </Modal>}
+
       {modal === "report" && (
 
         <Modal
@@ -1964,7 +1976,7 @@ export function App() {
 
           <div className="modal-body">
 
-            <p className="muted">Vous venez de voir un contrôle ?</p>
+            <p className="muted">Vous venez de voir un contrôle ? Votre publication sera associée à votre compte.</p>
 
             <div className="transport-choice">
 
@@ -2229,7 +2241,7 @@ export function App() {
 
       )}
 
-      {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard)setModal(null);}}><Account onGuard={setAccountGuard} currentTrip={{from,to}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
+      {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard){setReportIntent(false);setModal(null);}}}><Account onGuard={setAccountGuard} onContinue={reportIntent?()=>{setReportIntent(false);setReportError('');setModal('report');}:undefined} currentTrip={{from,to}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
 
       {modal === "settings" && (
 

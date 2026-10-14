@@ -3735,3 +3735,5 @@ details[open]>summary:after { transform:rotate(225deg); }
 .guidance-heading { font-size:10px; }
 .navigation-recenter { position:absolute; z-index:600; right:16px; top:155px; display:flex; align-items:center; gap:7px; background:white; color:#17647d; border-radius:18px; min-height:42px; padding:10px 14px; box-shadow:0 3px 14px #16394925; font-size:12px; }
 @media(max-width:760px){ .route-workspace.guiding { max-height:46dvh; } .sheet-expanded .route-workspace.guiding { max-height:74dvh; height:auto; } .guidance { padding:6px 16px 14px; } .guidance-current h2 { font-size:17px; } .guidance-current { padding:13px; } .guidance-trip { gap:20px; } }
+
+.report-login{max-width:380px;margin:0 auto;text-align:center;padding:4px 4px 12px}.report-login h2{font-size:23px;margin:0 0 12px}.report-login p{font-size:14px;line-height:1.6;color:#526976}.report-login .report-login-note{background:#eef8fb;padding:13px;border-radius:16px;font-size:13px}.report-login .account-submit{padding:12px;font-size:14px}.report-continue{margin:18px 0}

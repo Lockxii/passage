@@ -166,7 +166,7 @@ export async function request(path, options = {}, auth = true) {
 
     }
 
-    if (response.status === 401 && auth) {
+    if (response.status === 401 && auth && data.code !== "ACCOUNT_REQUIRED") {
 
       const key = "passage-session:" + serverURL;
 
@@ -178,7 +178,7 @@ export async function request(path, options = {}, auth = true) {
 
     }
 
-    if (!response.ok) { const error=new Error(data.error || "La demande a échoué."); error.status=response.status; throw error; }
+    if (!response.ok) { const error=new Error(data.error || "La demande a échoué."); error.status=response.status; error.code=data.code; throw error; }
 
     if(path==='/account/workspace'&&data.resetGuest&&!options.retried){await resetGuestSession();return request(path,{...options,retried:true},false);}
     return data;

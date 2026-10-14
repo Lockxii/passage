@@ -333,6 +333,12 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (url.pathname === "/api/reports" && req.method === "POST") {
+        const currentAccount = () => {
+          try { return accounts.me(req.headers['x-account-token']); }
+          catch (error) { if(error.status===401)error.code='ACCOUNT_REQUIRED'; throw error; }
+        };
+        currentAccount();
+        store.session(token);
 
         limit(ip + ":create", 12, 3600000);
 
@@ -366,9 +372,14 @@ const server = http.createServer(async (req, res) => {
 
         }
 
-        store.session(token);
-        if(req.headers['x-account-token']&&!store.linkAccount(token,accounts.me(req.headers['x-account-token']).id))throw new ApiError(409,'Ouvrez Mon compte pour actualiser votre session.');
-        return send({ id: store.add(token, p, await normalizePhoto(p.photo)) }, 201);
+        const photo = await normalizePhoto(p.photo);
+        // Body/image processing is asynchronous: do not accept a revoked account afterwards.
+        const user = currentAccount();
+        if(!store.linkAccount(token,user.id)) {
+          const error=new ApiError(409,'Actualisez votre compte avant de publier.');
+          error.code='REPORT_SESSION_CONFLICT';throw error;
+        }
+        return send({ id: store.add(token, p, photo) }, 201);
 
       }
 
@@ -549,7 +560,7 @@ const server = http.createServer(async (req, res) => {
       res.end(
 
         JSON.stringify({
-
+          ...(error.status && error.code ? {code:error.code} : {}),
           error: error.status
 
             ? error.message

@@ -14,7 +14,18 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
-## New: nearby departures
+## New: signed-in reporting
+
+Publishing a report now requires a valid account. Signed-out visitors get a clear sign-in/create-account action; the map and public reports remain readable without an account. If a session expires during composition, the server refuses publication and the current in-memory draft can be resumed after signing in again. Registration still requires acknowledging the recovery key before continuing.
+
+<table><tr>
+<td align="center"><strong>Sign in to report</strong><br><img src="docs/screenshots/report-sign-in.jpg" width="260" alt="Mobile sign-in gate explaining that an account is required to publish while public reports remain readable" /></td>
+<td align="center"><strong>Resume after session expiry</strong><br><img src="docs/screenshots/report-session-expired.jpg" width="260" alt="Expired-session notice offering sign-in and preserving the current report draft" /></td>
+</tr></table>
+
+Fresh 390 × 844 captures from October 14, 2026, using an isolated demonstration database. No personal account details, credentials or photos are shown. [Implementation and verification notes](docs/signed-in-reporting.md).
+
+## Nearby departures
 
 Find up to four physical stops/platforms within 800 metres from the home screen, then choose a line to see upcoming departures. Location is requested only when you tap the button and is not stored. Distances are straight-line estimates; refresh your position after moving. Bus, metro and tram schedules are supported; live information appears only when fresh matching SIRI visits exist, otherwise scheduled GTFS times are clearly labelled.
 
@@ -52,10 +63,10 @@ Click a screenshot to view it at full size. Map attribution is preserved.
 | Bus departures | Fresh Ilévia SIRI stop-monitoring data when available, expected departures and delays, with scheduled GTFS fallback. |
 | Personal space | Account registration, login, one-use recovery keys, home/work destinations and saved journeys. |
 | Home shortcuts | Launch saved destinations and manage home/work or remove favorites directly from the home screen. |
-| Community reports | Stop- and line-based ticket-inspector reports, confirmations, automatic expiry and optional photo attachments. |
+| Community reports | Signed-in creation of stop- and line-based ticket-inspector reports, public reading, confirmations, automatic expiry and optional photo attachments. |
 | Interface | Responsive map-first panels, custom controls, cyan accents and keyboard focus states. |
 
-The remaining requested additions—opt-in offline storage, profile avatars, mandatory account login for reporting, and a dedicated disruptions feed—are **not implemented in this snapshot**. Reports currently use anonymous device sessions, with optional account association.
+The remaining requested additions—opt-in offline storage, profile avatars, and a dedicated disruptions feed—are **not implemented in this snapshot**. New reports require a valid account and are linked to it. Device sessions remain in use for voting and legacy ownership; account email addresses are not exposed in public reports.
 
 ## Important limitations
 
