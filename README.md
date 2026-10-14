@@ -25,7 +25,7 @@ Publishing a report now requires a valid account. Signed-out visitors get a clea
 
 Fresh 390 × 844 captures from October 14, 2026, using an isolated demonstration database. No personal account details, credentials or photos are shown. [Implementation and verification notes](docs/signed-in-reporting.md).
 
-## Nearby departures
+## New: nearby departures
 
 Find up to four physical stops/platforms within 800 metres from the home screen, then choose a line to see upcoming departures. Location is requested only when you tap the button and is not stored. Distances are straight-line estimates; refresh your position after moving. Bus, metro and tram schedules are supported; live information appears only when fresh matching SIRI visits exist, otherwise scheduled GTFS times are clearly labelled.
 

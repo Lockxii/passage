@@ -21,7 +21,7 @@ After verifying that the implementation commit is included in remote `main` and 
 | Target date | Improvement | Acceptance criteria | Status |
 | --- | --- | --- | --- |
 | Oct 13 | Nearby departures on home | On-demand location; nearby stops and distances; upcoming passages; freshness labels and scheduled fallback; useful location-denied and no-results states. | Completed Oct 13 |
-| Oct 14 | Signed-in reporting | Require an account in both the composer and server API; preserve existing report reads and ownership; offer a clear sign-in action. | Planned |
+| Oct 14 | Signed-in reporting | Require an account in both the composer and server API; preserve existing report reads and ownership; offer a clear sign-in action. | Completed Oct 14 |
 | Oct 15 | Profile photos and report authors | Upload, replace and remove a validated avatar; strip metadata; show public nickname/avatar on reports without exposing email or private account data. | Planned |
 | Oct 16 | Opt-in offline journey reference | Account setting for device-local favorites and saved journey steps; visible saved timestamp; disable removes cache; clear personal cache on logout; do not promise offline routing, live data or map tiles. | Planned |
 | Oct 17 | Transport disruption context | Show verified fresh delays/cancellations affecting displayed lines; explain partial coverage and link to official traffic information; never imply a complete alerts feed or road congestion. | Planned |
@@ -43,4 +43,6 @@ If a feature already exists, verify it and select the next unfinished item rathe
 | --- | --- | --- | --- | --- |
 | Oct 13, 2026 | Nearby departures on home | 48 tests, 4 hosting checks, production build; mobile layout, bus line switching, metro fallback, denied location and no nearby stops verified | [Home](screenshots/nearby-home.jpg) · [Departures](screenshots/nearby-bus.jpg) | [18474f3](https://github.com/Lockxii/passage/commit/18474f3) |
 
-The October 13 delivery was started manually after the owner reported no result from the scheduled run. Available logs did not establish why the scheduled execution failed to produce work. The existing automation was re-registered for the thirteen remaining daily runs at 10:00 Europe/Paris, October 14–26. No successful future trigger is claimed here.
+| Oct 14, 2026 | Signed-in reporting | 48 tests including expanded auth/ownership HTTP coverage, 4 hosting checks, production build; mobile sign-in and expired-session draft recovery verified | [Sign-in gate](screenshots/report-sign-in.jpg) · [Session expiry](screenshots/report-session-expired.jpg) | [f13680a](https://github.com/Lockxii/passage/commit/f13680a) |
+
+The October 13 delivery was started manually after the owner reported no result from the scheduled run. Available logs did not establish why the scheduled execution failed to produce work. The existing automation was re-registered for the thirteen remaining daily runs at 10:00 Europe/Paris, October 14–26. The October 14 heartbeat ran and delivered the signed-in reporting feature.
