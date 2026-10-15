@@ -214,7 +214,7 @@ const server = http.createServer(async (req, res) => {
 
         "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Account-Token, X-Guest-Token",
 
-        "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
 
       });
 
@@ -265,6 +265,13 @@ const server = http.createServer(async (req, res) => {
           limit(ip+':account-auth',10,900000);
           const p=await body(req);
           return send(url.pathname.endsWith('/recover')?await accounts.recover(p):await accounts.rotateRecovery(token,p));
+        }
+        if(url.pathname==='/api/account/avatar'&&['PUT','DELETE'].includes(req.method)){
+          accounts.me(token);
+          limit(ip+':avatar',30,3600000);
+          let image=null;
+          if(req.method==='PUT'){const p=await body(req,1450000);if(typeof p.avatar!=='string')throw new ApiError(400,'Choisissez une photo.');image=await normalizePhoto(p.avatar,true);}
+          return send({user:accounts.setAvatar(token,image)});
         }
         if(req.method==='GET'&&url.pathname==='/api/account/me')return send({user:accounts.me(token)});
         if(req.method==='POST'&&url.pathname==='/api/account/logout'){accounts.logout(token);return send({ok:true});}
@@ -328,8 +335,14 @@ const server = http.createServer(async (req, res) => {
 
         }
 
-        return send({ reports: store.list(token, bbox), now: Date.now() });
+        return send({ reports: store.list(token, bbox).map(r=>({...r,author:accounts.reportAuthor(r.id)})), now: Date.now() });
 
+      }
+
+      if(req.method==='GET'&&/^\/api\/reports\/[^/]+\/avatar$/.test(url.pathname)){
+        const image=accounts.reportAvatar(url.pathname.split('/')[3]);
+        if(!image)throw new ApiError(404,'Photo indisponible.');
+        res.writeHead(200,{'Content-Type':'image/jpeg','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});return res.end(Buffer.from(image));
       }
 
       if (url.pathname === "/api/reports" && req.method === "POST") {

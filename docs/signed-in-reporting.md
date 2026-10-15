@@ -22,4 +22,4 @@ A structured `ACCOUNT_REQUIRED` response distinguishes account expiry from a fai
 
 ## Scope
 
-An account is not proof of identity and this change is not a complete anti-abuse system. Public nicknames/avatars are a separate planned feature. Physical Android testing and a new APK build were not performed; the web and Capacitor interfaces share this implementation. No public application deployment or binary release was made.
+An account is not proof of identity and this change is not a complete anti-abuse system. Public nicknames/avatars were subsequently added on October 15; see [profile photos](profile-photos.md). Physical Android testing and a new APK build were not performed; the web and Capacitor interfaces share this implementation. No public application deployment or binary release was made.

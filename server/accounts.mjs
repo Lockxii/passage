@@ -8,9 +8,10 @@ export function createAccounts(path,clock=Date.now){
  db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS accounts(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,salt TEXT NOT NULL,password TEXT NOT NULL); CREATE TABLE IF NOT EXISTS account_sessions(id TEXT PRIMARY KEY,account TEXT NOT NULL,expires INTEGER NOT NULL);`);
  if(!db.prepare('PRAGMA table_info(accounts)').all().some(c=>c.name==='recovery'))db.exec('ALTER TABLE accounts ADD COLUMN recovery TEXT');
  db.exec('CREATE TABLE IF NOT EXISTS favorites(account TEXT NOT NULL,id TEXT NOT NULL,label TEXT NOT NULL,origin TEXT,destination TEXT NOT NULL,PRIMARY KEY(account,id))');
+ if(!db.prepare('PRAGMA table_info(accounts)').all().some(c=>c.name==='avatar'))db.exec('ALTER TABLE accounts ADD COLUMN avatar BLOB');
  const newRecovery=()=>randomBytes(24).toString('hex').toUpperCase().match(/.{6}/g).join('-');
  const recoveryHash=value=>hash(typeof value==='string'?value.replace(/[\s-]/g,'').toUpperCase():'');
- const profile=a=>({id:a.id,email:a.email,name:a.name});
+ const profile=a=>({id:a.id,email:a.email,name:a.name,avatar:a.avatar?`data:image/jpeg;base64,${Buffer.from(a.avatar).toString('base64')}`:null});
  function issue(a){db.prepare('DELETE FROM account_sessions WHERE expires<=?').run(clock());const token=randomBytes(32).toString('hex');db.prepare('INSERT INTO account_sessions VALUES(?,?,?)').run(hash(token),a.id,clock()+7*86400000);return {user:profile(a),token};}
  return {
  async authenticate(p,register=false){
@@ -59,6 +60,9 @@ export function createAccounts(path,clock=Date.now){
   return {recoveryKey};
  },
  me(token){if(typeof token!=='string'||!/^[a-f0-9]{64}$/.test(token))throw new ApiError(401,'Connectez-vous à votre compte.');const a=db.prepare('SELECT a.* FROM accounts a JOIN account_sessions s ON s.account=a.id WHERE s.id=? AND s.expires>?').get(hash(token),clock());if(!a)throw new ApiError(401,'Votre session a expiré. Reconnectez-vous.');return profile(a);},
+ setAvatar(token,image){const user=this.me(token);db.prepare('UPDATE accounts SET avatar=? WHERE id=?').run(image,user.id);return this.me(token);},
+ reportAuthor(id){const a=db.prepare('SELECT a.name,a.avatar FROM reports r JOIN account_report_owners o ON o.owner=r.owner JOIN accounts a ON a.id=o.account WHERE r.id=? AND r.closed=0 AND r.expires>?').get(id,clock());return a?{name:a.name,hasAvatar:!!a.avatar}:null;},
+ reportAvatar(id){return db.prepare('SELECT a.avatar FROM reports r JOIN account_report_owners o ON o.owner=r.owner JOIN accounts a ON a.id=o.account WHERE r.id=? AND r.closed=0 AND r.expires>?').get(id,clock())?.avatar;},
  logout(token){if(typeof token==='string')db.prepare('DELETE FROM account_sessions WHERE id=?').run(hash(token));},
  favorites(token){const user=this.me(token);return db.prepare('SELECT id,label,origin,destination FROM favorites WHERE account=? ORDER BY rowid').all(user.id).map(f=>({...f,from:f.origin?JSON.parse(f.origin):null,to:JSON.parse(f.destination)}));},
  saveFavorite(token,p){

@@ -1836,6 +1836,7 @@ export function App() {
             </span>
 
             <h3>{selected.place}</h3>
+            {selected.author&&<div className="report-author"><span>{selected.author.hasAvatar?<img src={(serverURL||'')+'/api/reports/'+selected.id+'/avatar'} alt="" onError={e=>{e.currentTarget.style.display='none';}}/>:selected.author.name.slice(0,1).toUpperCase()}</span><div><small>Signalé par</small><strong>{selected.author.name}</strong></div></div>}
             {!!selected.hasPhoto&&<figure className="report-photo"><img src={(serverURL||'')+'/api/reports/'+selected.id+'/photo'} alt="Photo jointe à ce signalement"/><figcaption>Photo partagée · non vérifiée</figcaption></figure>}
 
             <p>
@@ -1976,7 +1977,7 @@ export function App() {
 
           <div className="modal-body">
 
-            <p className="muted">Vous venez de voir un contrôle ? Votre publication sera associée à votre compte.</p>
+            <p className="muted">Vous venez de voir un contrôle ? Votre pseudo et votre photo de profil seront visibles avec ce signalement.</p>
 
             <div className="transport-choice">
 

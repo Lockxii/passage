@@ -14,6 +14,17 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: profile photos and report authors
+
+Add, replace or remove an optional profile photo in **Mon compte**. Reports display the author's public nickname and current avatar; email addresses and account identifiers remain private. Images are cropped to a square and re-encoded server-side without metadata. Removing an avatar immediately makes its public image endpoint unavailable.
+
+<table><tr>
+<td align="center"><strong>Profile photo</strong><br><img src="docs/screenshots/profile-photo.jpg" width="260" alt="French mobile account screen with a demo avatar and custom change and remove controls" /></td>
+<td align="center"><strong>Public report author</strong><br><img src="docs/screenshots/report-author.jpg" width="260" alt="Mobile report detail showing the demo author's nickname and avatar without private account information" /></td>
+</tr></table>
+
+Fresh 390 × 844 captures from October 15, 2026, using an isolated test database, a fictional nickname, a reserved example.org email and a synthetic avatar. The report is demonstration data, not an observed control. Background map © OpenStreetMap contributors; transit data © Ilévia / MEL, Licence Ouverte 2.0. [Implementation and verification notes](docs/profile-photos.md).
+
 ## New: signed-in reporting
 
 Publishing a report now requires a valid account. Signed-out visitors get a clear sign-in/create-account action; the map and public reports remain readable without an account. If a session expires during composition, the server refuses publication and the current in-memory draft can be resumed after signing in again. Registration still requires acknowledging the recovery key before continuing.
@@ -66,7 +77,7 @@ Click a screenshot to view it at full size. Map attribution is preserved.
 | Community reports | Signed-in creation of stop- and line-based ticket-inspector reports, public reading, confirmations, automatic expiry and optional photo attachments. |
 | Interface | Responsive map-first panels, custom controls, cyan accents and keyboard focus states. |
 
-The remaining requested additions—opt-in offline storage, profile avatars, and a dedicated disruptions feed—are **not implemented in this snapshot**. New reports require a valid account and are linked to it. Device sessions remain in use for voting and legacy ownership; account email addresses are not exposed in public reports.
+The remaining requested additions—opt-in offline storage and a dedicated disruptions feed—are **not implemented in this snapshot**. New reports require a valid account and are linked to it. Device sessions remain in use for voting and legacy ownership; account email addresses are not exposed in public reports.
 
 ## Important limitations
 
