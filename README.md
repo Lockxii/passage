@@ -14,6 +14,14 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: optional offline journey reference
+
+In **Mon compte**, enable **Conserver une copie locale** to save a text-only reference of your favorites and the currently displayed journey. The copy remains readable when the server is unavailable in an already-loaded application. It displays its save time, has no live-data badges, and can be refreshed manually. Disabling the option or signing out clears it.
+
+<img src="docs/screenshots/offline-reference.jpg" width="260" alt="390 by 844 French mobile account screen showing the optional local copy, save date, a public-place favorite and saved walking steps" />
+
+Fresh 390 × 844 capture from October 16, 2026, using a disposable account and a route between public Lille landmarks. Background map © OpenStreetMap contributors; transit data © Ilévia / MEL, Licence Ouverte 2.0. This is **not offline routing, navigation, live transport information or map downloads**. Loading the website from scratch without a network is not supported. [Behavior, privacy and verification](docs/offline-reference.md).
+
 ## New: profile photos and report authors
 
 Add, replace or remove an optional profile photo in **Mon compte**. Reports display the author's public nickname and current avatar; email addresses and account identifiers remain private. Images are cropped to a square and re-encoded server-side without metadata. Removing an avatar immediately makes its public image endpoint unavailable.
@@ -77,7 +85,7 @@ Click a screenshot to view it at full size. Map attribution is preserved.
 | Community reports | Signed-in creation of stop- and line-based ticket-inspector reports, public reading, confirmations, automatic expiry and optional photo attachments. |
 | Interface | Responsive map-first panels, custom controls, cyan accents and keyboard focus states. |
 
-The remaining requested additions—opt-in offline storage and a dedicated disruptions feed—are **not implemented in this snapshot**. New reports require a valid account and are linked to it. Device sessions remain in use for voting and legacy ownership; account email addresses are not exposed in public reports.
+A dedicated disruptions feed remains **not implemented in this snapshot**. New reports require a valid account and are linked to it. Device sessions remain in use for voting and legacy ownership; account email addresses are not exposed in public reports.
 
 ## Important limitations
 

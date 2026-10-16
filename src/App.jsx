@@ -2242,7 +2242,7 @@ export function App() {
 
       )}
 
-      {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard){setReportIntent(false);setModal(null);}}}><Account onGuard={setAccountGuard} onContinue={reportIntent?()=>{setReportIntent(false);setReportError('');setModal('report');}:undefined} currentTrip={{from,to}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
+      {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard){setReportIntent(false);setModal(null);}}}><Account onGuard={setAccountGuard} onContinue={reportIntent?()=>{setReportIntent(false);setReportError('');setModal('report');}:undefined} currentTrip={{from,to,steps:guideSteps}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
 
       {modal === "settings" && (
 

@@ -3751,3 +3751,16 @@ details[open]>summary:after { transform:rotate(225deg); }
 .report-author small,.report-author strong{display:block}
 .report-author small{color:#687d88;font-size:11px;margin-bottom:3px}
 .report-author strong{font-size:14px;overflow-wrap:anywhere}
+
+.offline-reference{border:1px solid #dce9ef;background:#f6fbfd;border-radius:22px;padding:16px;margin:0 0 22px;text-align:left}
+.offline-heading{display:flex;align-items:center;gap:10px}
+.offline-heading>span{display:grid;place-items:center;width:40px;height:40px;flex-shrink:0;border-radius:14px;background:#d8f4fc;color:#008aa6}
+.offline-heading h3{font-size:16px;margin:0 0 3px}.offline-reference small{font-size:11px;color:#637987;line-height:1.45}
+.offline-reference p{font-size:12px;line-height:1.55;color:#506775;margin:12px 0}.offline-reference .offline-privacy{color:#667983}
+.offline-switch{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:white;width:100%;padding:12px;border-radius:15px;min-height:48px;font-size:13px;font-weight:600;text-align:left}
+.offline-toggle{width:38px;height:24px;flex-shrink:0;background:#c5d3db;border-radius:20px;padding:3px;box-sizing:border-box}
+.offline-toggle:after{content:'';display:block;width:18px;height:18px;border-radius:50%;background:white}.offline-switch[aria-checked=true] .offline-toggle{background:#00acd3}.offline-switch[aria-checked=true] .offline-toggle:after{transform:translateX(14px)}
+.offline-saved{display:flex;gap:8px;align-items:flex-start;color:#007e99;font-size:12px;margin:16px 0}.offline-saved small{display:block;margin-top:4px}
+.offline-reference details{border-top:1px solid #dce9ef;padding:12px 0}.offline-reference summary{cursor:pointer;font-size:13px;font-weight:600;min-height:30px;padding-top:6px}.offline-favorite{padding:9px 0;font-size:12px}.offline-favorite span,.offline-reference li span{display:block;color:#637987;line-height:1.5;margin-top:4px}
+.offline-trip{display:flex;align-items:flex-start;gap:7px;font-size:12px;line-height:1.5;margin:8px 0}.offline-trip svg{flex-shrink:0}.offline-reference ol{padding-left:22px;margin:14px 0 0}.offline-reference li{font-size:12px;padding:0 0 12px 3px;overflow-wrap:anywhere}.offline-reference li::marker{color:#008ba8;font-weight:bold}
+.offline-save{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#ddf5fc;color:#007f9b;border:0;border-radius:15px;padding:13px;font-weight:600}.offline-reference>small{display:block;margin-top:12px}

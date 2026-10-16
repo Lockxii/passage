@@ -1,3 +1,4 @@
+import OfflineReference,{offlineReference} from './OfflineReference.jsx';
 import ProfilePhoto from './ProfilePhoto.jsx';
 import PersonalSpace from './PersonalSpace.jsx';
 import React,{useEffect,useState} from 'react';
@@ -9,7 +10,7 @@ export default function Account({onGuard=()=>{},renderSearch,onLaunch,currentTri
  const [recovery,setRecovery]=useState(''),[notice,setNotice]=useState(''),[saved,setSaved]=useState(false),[rotate,setRotate]=useState(false);
  useEffect(()=>{onGuard(busy||!!recovery);},[busy,recovery,onGuard]);
  useEffect(()=>{if(!recovery)return;const warn=e=>{e.preventDefault();e.returnValue='';};window.addEventListener('beforeunload',warn);return()=>window.removeEventListener('beforeunload',warn);},[recovery]);
- useEffect(()=>{let active=true;const token=sessionStorage.getItem(key());if(!token){setLoading(false);return;}request('/account/me',{accountToken:token},false).then(r=>{if(active)setUser(r.user);}).catch(e=>{if(e.status===401)sessionStorage.removeItem(key());if(active)setError(e.message);}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[]);
+ useEffect(()=>{let active=true;const token=sessionStorage.getItem(key());if(!token){setLoading(false);return;}request('/account/me',{accountToken:token},false).then(r=>{if(active){try{offlineReference().connect(r.user.id);}catch{}setUser(r.user);}}).catch(e=>{if(e.status===401)sessionStorage.removeItem(key());if(active)setError(e.message);}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[]);
  async function submit(e){
   e.preventDefault();if(busy)return;const data=Object.fromEntries(new FormData(e.currentTarget));
   if(mode==='recover'&&data.password!==data.confirm){setError('Les deux mots de passe doivent être identiques.');return;}
@@ -17,7 +18,7 @@ export default function Account({onGuard=()=>{},renderSearch,onLaunch,currentTri
   try{
    const path=rotate?'recovery-key':mode;
    const r=await request('/account/'+path,{method:'POST',body:data,...(rotate?{accountToken:sessionStorage.getItem(key())}:{})},false);
-   if(r.token){sessionStorage.setItem(key(),r.token);setUser(r.user);}
+   if(r.token){sessionStorage.setItem(key(),r.token);try{offlineReference().connect(r.user.id);}catch{}setUser(r.user);}
    if(r.recoveryKey){setRecovery(r.recoveryKey);setSaved(false);setNotice('');setRotate(false);}
   }catch(e){setError(e.message);}finally{setBusy(false);}
  }
@@ -27,7 +28,13 @@ export default function Account({onGuard=()=>{},renderSearch,onLaunch,currentTri
   catch(e){if(e.status===401){sessionStorage.removeItem(key());setUser(null);setMode('login');}setError(e.message);}
   finally{setBusy(false);}
  }
- async function logout(){setBusy(true);setError('');try{await request('/account/logout',{method:'POST',body:{},accountToken:sessionStorage.getItem(key())},false);sessionStorage.removeItem(key());await resetGuestSession();setUser(null);setMode('login');setRotate(false);}catch(e){setError(e.message);}finally{setBusy(false);}}
+ async function logout(){
+  setBusy(true);setError('');const token=sessionStorage.getItem(key());
+  try{offlineReference().clear();sessionStorage.removeItem(key());setUser(null);setMode('login');setRotate(false);await resetGuestSession();
+   await request('/account/logout',{method:'POST',body:{},accountToken:token},false);
+  }catch(e){setError('Déconnexion du serveur non confirmée : '+e.message);}finally{setBusy(false);}
+ }
+
  async function copy(){try{await navigator.clipboard.writeText(recovery);setNotice('Clé copiée.');}catch{setNotice('Copie indisponible : sélectionnez la clé pour la copier, ou téléchargez-la.');}}
  async function download(){
   const text=`Passage — clé de récupération\nCompte : ${user.email}\nServeur : ${serverURL||location.origin}\n\n${recovery}\n\nGardez ce fichier dans un endroit privé. Cette clé permet de changer votre mot de passe. Elle sera remplacée après utilisation.\n`;
@@ -38,9 +45,10 @@ export default function Account({onGuard=()=>{},renderSearch,onLaunch,currentTri
   }catch(e){setNotice(e.name==='AbortError'?'Enregistrement annulé.':'Enregistrement indisponible. Utilisez Copier.');}
  }
  function switchMode(next){setMode(next);setError('');setShow(false);}
- if(loading)return <div className="account-loading" role="status"><LoaderCircle className="spin"/>Chargement du compte…</div>;
+ if(loading)return <><OfflineReference currentTrip={currentTrip}/><div className="account-loading" role="status"><LoaderCircle className="spin"/>Chargement du compte…</div></>;
  const passwordField=(label='Mot de passe',name='password')=><label>{label}<div className="account-input"><LockKeyhole size={18}/><input aria-label={label} name={name} type={show?'text':'password'} autoComplete={mode==='login'||rotate?'current-password':'new-password'} required minLength={12} maxLength={128} placeholder="12 caractères minimum" disabled={busy}/>{name==='password'&&<button type="button" aria-label={show?'Masquer le mot de passe':'Afficher le mot de passe'} aria-pressed={show} onClick={()=>setShow(v=>!v)}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button>}</div></label>;
  return <div className="account-panel">
+  <OfflineReference key={user?.id||"offline"} user={user} currentTrip={currentTrip} busy={busy} onBusy={setBusy}/>
   {recovery?<section className="recovery-card" aria-label="Votre clé de récupération"><div className="account-avatar"><KeyRound size={28}/></div><h2>Gardez votre clé</h2><p>Elle permet de récupérer votre compte sans e-mail. Elle ne sera plus affichée après cet écran. Gardez-la privée.</p><code className="recovery-code" tabIndex={0}>{recovery}</code><div className="recovery-actions"><button onClick={copy}><Copy size={17}/>Copier</button><button onClick={download}><Download size={17}/>Télécharger</button></div><p role="status" className="recovery-notice">{notice}</p><label className="recovery-saved"><input type="checkbox" checked={saved} onChange={e=>setSaved(e.target.checked)}/>J’ai enregistré ma clé en lieu sûr</label><button className="primary account-submit" disabled={!saved} onClick={()=>{setRecovery('');setMode('login');}}><Check size={18}/>Terminer</button></section>
   :user?<><ProfilePhoto user={user} onChange={setUser} busy={busy} onBusy={setBusy}/><h2>Bonjour {user.name}</h2><p className="account-email">{user.email}</p><span className="account-connected">Compte connecté</span>{onContinue&&<button className="primary account-submit report-continue" disabled={busy} onClick={continueReport}><ArrowRight size={18}/>{busy?'Vérification…':'Continuer mon signalement'}</button>}<PersonalSpace renderSearch={renderSearch} onLaunch={onLaunch} currentTrip={currentTrip}/>{rotate?<form onSubmit={submit} className="account-form"><p className="recovery-help">La nouvelle clé remplacera votre ancienne clé.</p>{passwordField('Mot de passe actuel')}<button className="primary account-submit" disabled={busy}>Générer une nouvelle clé</button><button type="button" disabled={busy} onClick={()=>{setRotate(false);setError('');}}>Annuler</button></form>:<button className="account-logout" onClick={()=>{setRotate(true);setError('');}}><KeyRound size={18}/>Clé de récupération</button>}<button className="account-logout" disabled={busy} onClick={logout}><LogOut size={18}/>Se déconnecter</button></>
   :<>{mode==='recover'?<><button className="account-back" disabled={busy} onClick={()=>switchMode('login')}>← Retour à la connexion</button><h2>Retrouver mon compte</h2><p className="recovery-help">Saisissez la clé enregistrée à l’inscription. Une nouvelle clé remplacera celle-ci après utilisation.</p></>:<div className="account-tabs" role="group" aria-label="Accès au compte">{[['login','Connexion'],['register','Créer un compte']].map(([id,label])=><button key={id} aria-pressed={mode===id} disabled={busy} onClick={()=>switchMode(id)}>{label}</button>)}</div>}
