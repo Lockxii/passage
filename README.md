@@ -14,6 +14,17 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: disruption context for displayed departures
+
+Departure cards now summarize fresh delays and cancelled passages for the selected stop and line. They explicitly distinguish missing, expired and unavailable realtime information, and never infer that the whole network is operating normally. The interface links to Ilévia's official traffic-information guidance. Routing still uses theoretical schedules; no network-wide disruption feed or road congestion layer is claimed.
+
+<table><tr>
+<td><img src="docs/screenshots/disruption-context.jpg" width="260" alt="Mobile departures with theoretical times and an explicit notice that no recent disruption data is available" /></td>
+<td><img src="docs/screenshots/disruption-unavailable.jpg" width="260" alt="Mobile departure card showing that passages and disruption verification are unavailable after the test server stops" /></td>
+</tr></table>
+
+Fresh 390 × 844 captures, October 17, 2026. A public square was used as a simulated location; no disruptions were fabricated for the screenshots. Map © OpenStreetMap contributors; stops and schedules © Ilévia / MEL. [Scope and verification](docs/disruption-context.md).
+
 ## New: optional offline journey reference
 
 In **Mon compte**, enable **Conserver une copie locale** to save a text-only reference of your favorites and the currently displayed journey. The copy remains readable when the server is unavailable in an already-loaded application. It displays its save time, has no live-data badges, and can be refreshed manually. Disabling the option or signing out clears it.

@@ -1,3 +1,5 @@
+import DisruptionContext from './DisruptionContext.jsx';
+import {freshVisits} from './disruption-context';
 import React,{useEffect,useState} from 'react';
 
 import {request} from './api';
@@ -32,7 +34,7 @@ export default function BusDepartures({leg,compact=false}){
 
  if(!stop||!line)return null;
 
- const fresh=(data?.departures||[]).filter(r=>r.realtime&&now-r.recorded<=180&&r.recorded<=now+30&&(r.expected??r.scheduled)>=now-30);
+ const fresh=freshVisits(data,now);
 
  const live=fresh.length>0;
 
@@ -40,11 +42,11 @@ export default function BusDepartures({leg,compact=false}){
 
  return <section className="bus-departures" aria-label={`Prochains passages ${mode} ${leg.line}`}>
 
-  <div className="bus-departures-heading"><strong>{mode} {leg.line} · prochains passages</strong><span className={live?'live-badge':''}>{live?'En direct':!data&&!failed?'Recherche…':'Théorique'}</span></div>
+  <div className="bus-departures-heading"><strong>{mode} {leg.line} · prochains passages</strong><span className={live?'live-badge':''}>{live?'En direct':!data&&!failed?'Recherche…':entries.length?'Théorique':'Indisponible'}</span></div>
 
   {!compact&&<p>{leg.from.name} · toutes les destinations de ce quai</p>}
 
-  <ul>{entries.slice(0,compact?3:4).map((r,i)=>{const realtime=r.realtime,at=realtime?r.expected??r.scheduled:r.scheduled;return <li key={(r.journey||r.trip||'')+':'+i}>
+  <ul>{entries.slice(0,compact?3:4).map((r,i)=>{const realtime=r.realtime,at=realtime?(r.cancelled?r.scheduled:r.expected??r.scheduled):r.scheduled;return <li key={(r.journey||r.trip||'')+':'+i}>
 
    <div><strong>{Number.isFinite(at)?timeLabel(at):'Horaire indisponible'}</strong><span>{r.destination}</span></div>
 
@@ -54,7 +56,9 @@ export default function BusDepartures({leg,compact=false}){
 
   {!entries.length&&(data||failed)&&<p>{data?"Aucun départ prévu dans les deux prochaines heures.":"Prochains passages indisponibles."}</p>}
 
-  <p className="bus-source">{live?'Ilévia / MEL · actualisation chaque minute':failed||data?.status==='unavailable'?'Temps réel indisponible · horaires théoriques conservés':data?'Pas de donnée récente pour cette ligne · horaires théoriques': 'Recherche des prochains passages…'}</p>
+  <p className="bus-source">{live?'Ilévia / MEL · actualisation chaque minute':failed||data?.status==='unavailable'?(entries.length?'Temps réel indisponible · horaires théoriques conservés':'Temps réel indisponible · aucun horaire affiché'):data?'Pas de donnée récente pour cette ligne · horaires théoriques': 'Recherche des prochains passages…'}</p>
+
+  <DisruptionContext data={data} now={now} failed={failed} line={leg.line}/>
 
   {!compact&&<p className="bus-source">Le trajet et son arrivée restent calculés sur les horaires théoriques.</p>}
 

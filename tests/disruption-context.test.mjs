@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {freshVisits,disruptionContext} from '../src/disruption-context.js';
+const now=10000,visit={realtime:true,recorded:now-20,scheduled:now+100,expected:now+220,delaySeconds:120};
+const data=departures=>({status:'live',departures});
+test('fresh delays and cancellations are summarized without treating cancellations as delays',()=>{assert.deepEqual(disruptionContext(data([visit,{...visit,cancelled:true,delaySeconds:900}]),now),{state:'affected',cancelled:1,delayed:1,maxDelay:2,recorded:now-20});});
+test('expired, future, scheduled-only and past visits cannot create an alert',()=>{for(const change of [{recorded:now+31},{realtime:false},{expected:now-31},{expected:now+7201}])assert.equal(disruptionContext(data([{...visit,...change}]),now).state,'no_fresh_data');});
+test('provider failure does not reuse cached live visits',()=>{assert.equal(disruptionContext({...data([visit]),status:'unavailable'},now).state,'unavailable');assert.equal(disruptionContext(data([visit]),now,true).state,'unavailable');assert.equal(disruptionContext(null,now,true).state,'unavailable');assert.equal(disruptionContext(null,now).state,'loading');});
+test('no observed delay is not conflated with missing coverage; advances and unknown delay are not alerts',()=>{for(const delaySeconds of [null,undefined,NaN,-300,0,59])assert.equal(disruptionContext(data([{...visit,delaySeconds}]),now).state,'no_observed_impact');assert.equal(disruptionContext({status:'no_fresh_data',departures:[]},now).state,'no_fresh_data');});
+test('cancellations use their scheduled time even if the expected time is absent or obsolete',()=>{for(const expected of [null,now-200])assert.equal(freshVisits(data([{...visit,cancelled:true,expected}]),now).length,1);assert.equal(freshVisits(data([{...visit,cancelled:true,scheduled:now-31}]),now).length,0);});
+test('an alert naturally expires as the browser clock advances',()=>{assert.equal(disruptionContext(data([visit]),now).state,'affected');assert.equal(disruptionContext(data([visit]),now+161).state,'stale');});
