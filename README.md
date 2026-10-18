@@ -14,6 +14,13 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: optional alighting reminder
+
+Enable **Me rappeler de descendre** during guidance to receive a one-time proximity reminder near your bus, metro or tram destination stop. It requires recent, precise GPS samples and keeps boarding/alighting confirmation manual. Keep the app visible; underground GPS and vibration support vary.
+
+<img src="docs/screenshots/alighting-reminder.jpg" width="260" alt="French mobile guidance with an optional alighting reminder triggered near République Beaux-Arts" />
+
+Fresh 390 × 844 capture, October 18, 2026: real guidance UI in a development fixture with a simulated public-place journey and GPS. No personal data; physical vibration is not verified. [Behavior, limits and verification](docs/alighting-reminder.md).
 ## New: disruption context for displayed departures
 
 Departure cards now summarize fresh delays and cancelled passages for the selected stop and line. They explicitly distinguish missing, expired and unavailable realtime information, and never infer that the whole network is operating normally. The interface links to Ilévia's official traffic-information guidance. Routing still uses theoretical schedules; no network-wide disruption feed or road congestion layer is claimed.

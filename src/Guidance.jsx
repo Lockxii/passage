@@ -1,3 +1,4 @@
+import AlightingReminder from './AlightingReminder.jsx';
 import {remainingWalk,transitHint} from './live-navigation';
 import BusDepartures from './BusDepartures.jsx';
 
@@ -78,6 +79,8 @@ export default function Guidance({steps,index,onIndex,onStop,onPosition,onReplan
   <progress value={index+1} max={steps.length} aria-label="Progression du trajet"/>
 
   <div className="guidance-current" aria-live="polite"><span className="guidance-icon"><Icon size={27}/></span><h2>{step.title}</h2><p>{remaining!==null?`${remaining} m sur cette portion`:step.detail}</p>{remaining!==null&&turn&&<strong className="live-turn">{remaining<=20?"Ensuite : ":`Dans ${remaining} m : `}{turn.title}</strong>}{step.kind==='board'&&<strong className="departure-time">Départ théorique à {timeLabel(step.departure)}</strong>}</div>
+
+  <AlightingReminder route={route} step={step} position={position} tracking={tracking} now={now}/>
 
   {fresh&&busMessage&&<p className="bus-guidance-hint" role="status">{busMessage}</p>}
 
