@@ -1,3 +1,4 @@
+import {preferences,preferenceKey,readPreference,rankJourneys} from './journey-preferences';
 import BusDepartures from './BusDepartures.jsx';
 
 import React, {useState} from 'react';
@@ -15,17 +16,23 @@ const icons={bus:Bus,metro:TrainFront,tram:TramFront};
 export default function JourneyResults({journeys,route,onSelect,onMap,onRefresh,onStart,to,warning}){
 
  const [expanded,setExpanded]=useState(false);
+ const [preference,setPreference]=useState(()=>readPreference()),[saveError,setSaveError]=useState(false);
+ const ordered=rankJourneys(journeys,preference),fastest=rankJourneys(journeys)[0];
+ function choose(value){setPreference(value);setExpanded(false);onSelect(rankJourneys(journeys,value)[0]);try{localStorage.setItem(preferenceKey,value);setSaveError(false);}catch{setSaveError(true);}}
 
  return <section className="route-result" aria-label="Itinéraires proposés">
 
   <div className="results-heading"><span>{journeys.length} trajet{journeys.length>1?'s':''} proposé{journeys.length>1?'s':''}</span><button onClick={onRefresh} aria-label="Actualiser les itinéraires"><RefreshCw size={16}/></button></div>
 
-  <div className="journey-options">{journeys.map((j,i)=><button key={j.id} className={'journey-option '+(j.id===route.id?'chosen':'')} aria-pressed={j.id===route.id} onClick={()=>{onSelect(j);setExpanded(false);}}>
+  <div className="journey-preferences" role="group" aria-label="Préférence de trajet">{Object.entries(preferences).map(([value,label])=><button key={value} aria-pressed={preference===value} onClick={()=>choose(value)}>{label}</button>)}</div>
+  <p className="preference-explanation" role="status">{saveError?'Choix appliqué, mais impossible de le mémoriser sur cet appareil.':'Préférence mémorisée sur cet appareil.'} Comparaison parmi les trajets proposés, sur horaires théoriques.</p>
+  <div className="journey-options">{ordered.map((j,i)=><button key={j.id} className={'journey-option '+(j.id===route.id?'chosen':'')} aria-pressed={j.id===route.id} onClick={()=>{onSelect(j);setExpanded(false);}}>
 
-   <div className="option-top"><span className={'option-label '+(i===0?'recommended':'')}>{i===0?<><Check size={13}/>Le plus rapide</>:j.boardings?(j.legs.some(l=>l.mode==='metro')?'Via métro':'Autre possibilité'):'Tout à pied'}</span><strong>{minutes(j.duration)} <small>min</small></strong></div>
+   <div className="option-top"><span className={'option-label '+(j.arrival===fastest.arrival?'recommended':'')}>{j.arrival===fastest.arrival?<><Check size={13}/>Le plus rapide</>:i===0&&preference!=='fastest'?preferences[preference]:j.boardings?(j.legs.some(l=>l.mode==='metro')?'Via métro':'Autre possibilité'):'Tout à pied'}</span><strong>{minutes(j.duration)} <small>min</small></strong></div>
 
    <div className="option-bottom"><span className="leg-icons"><Footprints size={17}/>{j.legs.filter(l=>l.kind==='transit').map((l,k)=>{const Icon=icons[l.mode]||Bus;return <React.Fragment key={k}><ChevronRight size={12}/><span className="transit-chip"><Icon size={15}/>{l.line}</span></React.Fragment>})}</span><span className="arrival-time">{time(j.departure)} — {time(j.arrival)}</span></div>
 
+   {j.arrival>fastest.arrival&&<small className="preference-tradeoff">+{Math.ceil((j.arrival-fastest.arrival)/60)} min à l’arrivée par rapport au plus rapide</small>}
    <small className="option-meta">{Math.ceil(j.walking/60)} min à pied{j.boardings?` · ${j.changes===0?'Sans correspondance':j.changes+' correspondance'+(j.changes>1?'s':'')}`:''}</small>
 
   </button>)}</div>

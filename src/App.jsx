@@ -1,3 +1,4 @@
+import {readPreference,rankJourneys} from './journey-preferences';
 import NearbyDepartures from './NearbyDepartures.jsx';
 import HomeFavorites from './HomeFavorites.jsx';
 import {findStops} from './stop-search.js';
@@ -1058,7 +1059,7 @@ export function App() {
 
       );
 
-      if (id === routeSeq.current) {setJourneys(r.journeys);setRoute(r.journeys[0]);setJourneyWarning(r.warning||"");if(resumeGuidance.current){setGuideIndex(0);resumeGuidance.current=false;}}
+      if (id === routeSeq.current) {setJourneys(r.journeys);setRoute(rankJourneys(r.journeys,readPreference())[0]);setJourneyWarning(r.warning||"");if(resumeGuidance.current){setGuideIndex(0);resumeGuidance.current=false;}}
 
     } catch (e) {
 

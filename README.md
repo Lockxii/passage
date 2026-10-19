@@ -14,6 +14,14 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or Ilévia.
 
+## New: remembered journey preferences
+
+Choose fastest arrival, less walking or fewer transfers. Passage reorders the proposed journeys using their scheduled arrival, walking time and transfer count, selects the preferred option and retains the fastest-arrival comparison. The choice stays on this device, without account synchronization.
+
+<img src="docs/screenshots/journey-preferences.jpg" width="260" alt="Mobile journey options prioritizing less walking while showing the five-minute arrival trade-off and fastest alternative" />
+
+Fresh 390 × 844 capture, October 19, 2026. Real results component with explicitly fictional demonstration journeys, no personal data. [Scope and verification](docs/journey-preferences.md).
+
 ## New: optional alighting reminder
 
 Enable **Me rappeler de descendre** during guidance to receive a one-time proximity reminder near your bus, metro or tram destination stop. It requires recent, precise GPS samples and keeps boarding/alighting confirmation manual. Keep the app visible; underground GPS and vibration support vary.
