@@ -26,7 +26,7 @@ After verifying that the implementation commit is included in remote `main` and 
 | Oct 16 | Opt-in offline journey reference | Account setting for device-local favorites and saved journey steps; visible saved timestamp; disable removes cache; clear personal cache on logout; do not promise offline routing, live data or map tiles. | Completed Oct 16 |
 | Oct 17 | Transport disruption context | Show verified fresh delays/cancellations affecting displayed lines; explain partial coverage and link to official traffic information; never imply a complete alerts feed or road congestion. | Completed Oct 17 |
 | Oct 18 | Alighting reminders | Opt-in in-app reminder and supported vibration near the destination stop; deduplicate; respect GPS freshness; retain manual confirmation and foreground limitation. | Completed Oct 18 |
-| Oct 19 | Journey preferences | Save a preference for less walking or fewer transfers; explain the trade-off and preserve fastest-arrival comparison; use measured journey properties. | Planned |
+| Oct 19 | Journey preferences | Save a preference for less walking or fewer transfers; explain the trade-off and preserve fastest-arrival comparison; use measured journey properties. | Completed Oct 19 |
 | Oct 20 | Stop details | Open a stop from the map/search; show served lines, direction-specific departures and a walking route to the selected physical platform. | Planned |
 | Oct 21 | Favorite stops | Save and remove frequently used stops; launch their departures directly from home; keep these distinct from favorite destinations. | Planned |
 | Oct 22 | Recent searches | Small device-local list of recent public destinations with remove/clear controls; no history sharing or automatic server upload. | Planned |
@@ -48,5 +48,7 @@ If a feature already exists, verify it and select the next unfinished item rathe
 | Oct 17, 2026 | Stop-level disruption context | 60 functional tests, 4 hosting checks, production build; mobile theoretical fallback and API-unavailable states verified | [Context](screenshots/disruption-context.jpg) · [Unavailable](screenshots/disruption-unavailable.jpg) | [d3e08cf](https://github.com/Lockxii/passage/commit/d3e08cf) |
 
 | Oct 18, 2026 | Optional foreground alighting reminder | 65 functional tests, 4 hosting checks, production build; mobile simulated GPS trigger, deduplication and manual alighting verified; hardware vibration not verified | [Reminder](screenshots/alighting-reminder.jpg) | [ed0615e](https://github.com/Lockxii/passage/commit/ed0615e) |
+
+| Oct 19, 2026 | Remembered journey preferences | 68 tests, 4 hosting checks, production build; mobile rankings, fastest comparison and reload persistence verified | [Preferences](screenshots/journey-preferences.jpg) | [c599c27](https://github.com/Lockxii/passage/commit/c599c27) |
 
 The October 13 delivery was started manually after the owner reported no result from the scheduled run. Available logs did not establish why the scheduled execution failed to produce work. The existing automation was re-registered for the thirteen remaining daily runs at 10:00 Europe/Paris, October 14–26. The October 14 heartbeat ran and delivered the signed-in reporting feature.
