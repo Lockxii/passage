@@ -1,3 +1,4 @@
+import StopDetails from './StopDetails.jsx';
 import {readPreference,rankJourneys} from './journey-preferences';
 import NearbyDepartures from './NearbyDepartures.jsx';
 import HomeFavorites from './HomeFavorites.jsx';
@@ -465,6 +466,7 @@ function SearchField({ label, value, onSelect, transit, routes }) {
 }
 
 export function App() {
+ const [detailStop,setDetailStop]=useState(null),[journeyMode,setJourneyMode]=useState('all');
 
   const mapEl = useRef(),
 
@@ -853,7 +855,7 @@ export function App() {
 
           bounds.contains([s.lat, s.lon]) &&
 
-          s.lines.some((id) => routes.get(id)?.mode === "metro"),
+          s.lines.some((id) => routes.has(id)),
 
       )
 
@@ -883,7 +885,7 @@ export function App() {
 
         marker.on("click", () => {
 
-          changeTo(s);
+          setDetailStop(s);setModal('stop-details');
 
         });
 
@@ -1005,7 +1007,8 @@ export function App() {
 
   }
 
-  function changeTo(p) {
+  function changeTo(p,mode='all') {
+    setJourneyMode(mode);
 
     routeSeq.current++;
 
@@ -1031,7 +1034,7 @@ export function App() {
 
     return () => clearTimeout(timer);
 
-  }, [from, to, departAt]);
+  }, [from, to, departAt, journeyMode]);
 
   async function calculate() {
 
@@ -1053,7 +1056,7 @@ export function App() {
 
         "/journeys",
 
-        { method: "POST", body: { from, to, mode:"all", ...(departAt?{departAt:new Date(departAt).toISOString()}: {}) } },
+        { method: "POST", body: { from, to, mode:journeyMode, ...(departAt?{departAt:new Date(departAt).toISOString()}: {}) } },
 
         false,
 
@@ -1393,6 +1396,7 @@ export function App() {
 
           <HomeFavorites refresh={modal} onLaunch={launchFavorite} onConfigure={()=>setModal('account')} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} renderDialog={props=><Modal {...props}/>}/>
 
+          <button className="resume-journey" onClick={()=>{setDetailStop(null);setModal('stop-details');}}><MapPin size={20}/>Arrêts et prochains passages</button>
           <NearbyDepartures stops={transit.stops} routes={routes}/>
 
           {route ? <button className="resume-journey" onClick={()=>setView('route')}><Navigation size={20}/><span><strong>{to?.name}</strong><small>{Math.ceil(route.duration/60)} min · Reprendre l’itinéraire</small></span><ChevronRight size={18}/></button> : null}
@@ -1521,6 +1525,7 @@ export function App() {
 
         </div>
 
+        {journeyMode==='walk' && guideIndex===null && <p className="journey-notice">� pied vers le quai s�lectionn�</p>}
         {route && guideIndex===null && <JourneyResults onStart={()=>{setGuideIndex(0);setSheetSize('normal');}} journeys={journeys} route={route} onSelect={r=>{setRoute(r);setGuideIndex(null);}} onMap={()=>setView('map')} onRefresh={calculate} from={from} to={to} warning={journeyWarning}/>}
 
         {route&&guideIndex!==null&&<Guidance route={route} steps={guideSteps} index={guideIndex} onIndex={setGuideIndex} canAutoReplan={()=>Date.now()-lastAutoReplan.current>90000} onStop={()=>{resumeGuidance.current=false;setGuideIndex(null);setSheetSize('normal');}} onPosition={setGuidePosition} onReplan={(position,place,automatic=false)=>{setGuideIndex(null);setDepartAt('');changeFrom(position?{...position}:place?{...place}:null);if(automatic){resumeGuidance.current=true;lastAutoReplan.current=Date.now();}setSheetSize('normal');}}/>}
@@ -2243,6 +2248,7 @@ export function App() {
 
       )}
 
+      {modal === 'stop-details' && <Modal title="Détail de l’arrêt" onClose={()=>setModal(null)}><StopDetails stops={transit.stops} routes={routes} initial={detailStop} from={from} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onWalk={(start,stop)=>{changeFrom(start);changeTo(stop,'walk');setModal(null);setView('route');}}/></Modal>}
       {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard){setReportIntent(false);setModal(null);}}}><Account onGuard={setAccountGuard} onContinue={reportIntent?()=>{setReportIntent(false);setReportError('');setModal('report');}:undefined} currentTrip={{from,to,steps:guideSteps}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
 
       {modal === "settings" && (

@@ -14,6 +14,14 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or IlÃ©via.
 
+## New: physical stop details
+
+Open a displayed stop marker or use **Arrêts et prochains passages** on home. Search by stop, city or platform identifier, select a physical platform and line, then read destination-labelled departures with existing realtime/scheduled status. Choose a departure point to calculate a walking-only route to that platform.
+
+<img src="docs/screenshots/stop-details.jpg" width="260" alt="Mobile Loos Mairie platform details with line selection and destination-labelled Ilévia departures" />
+
+Fresh 390 × 844 capture, October 20, 2026, using a disposable database and public stops. The displayed delay was received from the public feed, not simulated. Stops and departures © Ilévia / MEL; background map © OpenStreetMap contributors. [Scope and verification](docs/stop-details.md).
+
 ## New: remembered journey preferences
 
 Choose fastest arrival, less walking or fewer transfers. Passage reorders the proposed journeys using their scheduled arrival, walking time and transfer count, selects the preferred option and retains the fastest-arrival comparison. The choice stays on this device, without account synchronization.
