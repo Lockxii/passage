@@ -28,7 +28,7 @@ After verifying that the implementation commit is included in remote `main` and 
 | Oct 18 | Alighting reminders | Opt-in in-app reminder and supported vibration near the destination stop; deduplicate; respect GPS freshness; retain manual confirmation and foreground limitation. | Completed Oct 18 |
 | Oct 19 | Journey preferences | Save a preference for less walking or fewer transfers; explain the trade-off and preserve fastest-arrival comparison; use measured journey properties. | Completed Oct 19 |
 | Oct 20 | Stop details | Open a stop from the map/search; show served lines, direction-specific departures and a walking route to the selected physical platform. | Completed Oct 20 |
-| Oct 21 | Favorite stops | Save and remove frequently used stops; launch their departures directly from home; keep these distinct from favorite destinations. | Planned |
+| Oct 21 | Favorite stops | Save and remove frequently used stops; launch their departures directly from home; keep these distinct from favorite destinations. | Completed Oct 21 |
 | Oct 22 | Recent searches | Small device-local list of recent public destinations with remove/clear controls; no history sharing or automatic server upload. | Planned |
 | Oct 23 | Service freshness status | Compact status for timetable import age and realtime freshness; actionable retry and honest offline/provider-error states without stale live badges. | Planned |
 | Oct 24 | Share a journey summary | User-triggered share/copy of public stop names, line sequence and scheduled times; preview before sharing; exclude GPS coordinates, saved private addresses, tokens and account details. | Planned |
@@ -52,5 +52,7 @@ If a feature already exists, verify it and select the next unfinished item rathe
 | Oct 19, 2026 | Remembered journey preferences | 68 tests, 4 hosting checks, production build; mobile rankings, fastest comparison and reload persistence verified | [Preferences](screenshots/journey-preferences.jpg) | [c599c27](https://github.com/Lockxii/passage/commit/c599c27) |
 
 | Oct 20, 2026 | Physical stop details and walking access | 70 tests, 4 hosting checks, production build; mobile physical-platform search, line switching, destination departures and walking-only route verified | [Stop details](screenshots/stop-details.jpg) | [49c2a70](https://github.com/Lockxii/passage/commit/49c2a70) |
+
+| Oct 21, 2026 | Favorite physical stops on home | 73 tests, 4 hosting checks, production build; mobile add, reload, departure shortcut and removal from both screens verified | [Favorite stops](screenshots/favorite-stops.jpg) | [8bad177](https://github.com/Lockxii/passage/commit/8bad177) |
 
 The October 13 delivery was started manually after the owner reported no result from the scheduled run. Available logs did not establish why the scheduled execution failed to produce work. The existing automation was re-registered for the thirteen remaining daily runs at 10:00 Europe/Paris, October 14–26. The October 14 heartbeat ran and delivered the signed-in reporting feature.
