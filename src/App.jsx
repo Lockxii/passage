@@ -1,3 +1,5 @@
+import FavoriteStops from './FavoriteStops.jsx';
+import {readFavoriteStops,toggleFavoriteStop} from './favorite-stops';
 import StopDetails from './StopDetails.jsx';
 import {readPreference,rankJourneys} from './journey-preferences';
 import NearbyDepartures from './NearbyDepartures.jsx';
@@ -466,6 +468,9 @@ function SearchField({ label, value, onSelect, transit, routes }) {
 }
 
 export function App() {
+ const [favoriteStopIds,setFavoriteStopIds]=useState(()=>readFavoriteStops()),[favoriteStopError,setFavoriteStopError]=useState('');
+ function toggleStop(id){try{setFavoriteStopIds(toggleFavoriteStop(favoriteStopIds,id));setFavoriteStopError('');}catch(e){setFavoriteStopError(e.message==='Vous pouvez enregistrer jusqu�� 12 quais.'?e.message:'Impossible d�enregistrer les arr�ts sur cet appareil. R�essayez.');}}
+
  const [detailStop,setDetailStop]=useState(null),[journeyMode,setJourneyMode]=useState('all');
 
   const mapEl = useRef(),
@@ -1397,6 +1402,7 @@ export function App() {
           <HomeFavorites refresh={modal} onLaunch={launchFavorite} onConfigure={()=>setModal('account')} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} renderDialog={props=><Modal {...props}/>}/>
 
           <button className="resume-journey" onClick={()=>{setDetailStop(null);setModal('stop-details');}}><MapPin size={20}/>Arrêts et prochains passages</button>
+          <FavoriteStops ids={favoriteStopIds} stops={transit.stops} error={favoriteStopError} onToggle={toggleStop} onOpen={stop=>{setDetailStop(stop);setModal('stop-details');}}/>
           <NearbyDepartures stops={transit.stops} routes={routes}/>
 
           {route ? <button className="resume-journey" onClick={()=>setView('route')}><Navigation size={20}/><span><strong>{to?.name}</strong><small>{Math.ceil(route.duration/60)} min · Reprendre l’itinéraire</small></span><ChevronRight size={18}/></button> : null}
@@ -2248,7 +2254,7 @@ export function App() {
 
       )}
 
-      {modal === 'stop-details' && <Modal title="Détail de l’arrêt" onClose={()=>setModal(null)}><StopDetails stops={transit.stops} routes={routes} initial={detailStop} from={from} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onWalk={(start,stop)=>{changeFrom(start);changeTo(stop,'walk');setModal(null);setView('route');}}/></Modal>}
+      {modal === 'stop-details' && <Modal title="Détail de l’arrêt" onClose={()=>setModal(null)}><StopDetails favoriteIds={favoriteStopIds} onToggleFavorite={toggleStop} favoriteError={favoriteStopError} stops={transit.stops} routes={routes} initial={detailStop} from={from} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onWalk={(start,stop)=>{changeFrom(start);changeTo(stop,'walk');setModal(null);setView('route');}}/></Modal>}
       {modal === "account" && <Modal title="Mon compte" closeDisabled={accountGuard} onClose={()=>{if(!accountGuard){setReportIntent(false);setModal(null);}}}><Account onGuard={setAccountGuard} onContinue={reportIntent?()=>{setReportIntent(false);setReportError('');setModal('report');}:undefined} currentTrip={{from,to,steps:guideSteps}} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} onLaunch={launchFavorite}/></Modal>}
 
       {modal === "settings" && (

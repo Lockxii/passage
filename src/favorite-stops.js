@@ -1,0 +1,4 @@
+export const favoriteStopsKey='passage.favorite-stops.v1';
+export function normalizeFavoriteStops(value){return Array.isArray(value)?[...new Set(value.filter(id=>typeof id==='string'&&id.length>0&&id.length<=100))].slice(0,12):[];}
+export function readFavoriteStops(storage){try{return normalizeFavoriteStops(JSON.parse((storage??globalThis.localStorage).getItem(favoriteStopsKey)||'[]'));}catch{return [];}}
+export function toggleFavoriteStop(ids,id,storage){const clean=normalizeFavoriteStops(ids);if(typeof id!=='string'||!id.length||id.length>100)throw Error('Quai invalide.');if(!clean.includes(id)&&clean.length>=12)throw Error('Vous pouvez enregistrer jusqu’à 12 quais.');const next=clean.includes(id)?clean.filter(x=>x!==id):[...clean,id];(storage??globalThis.localStorage).setItem(favoriteStopsKey,JSON.stringify(next));return next;}
