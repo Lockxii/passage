@@ -1,3 +1,5 @@
+import RecentStops from './RecentStops.jsx';
+import {readRecent,addRecent,saveRecent} from './recent-stops';
 import FavoriteStops from './FavoriteStops.jsx';
 import {readFavoriteStops,toggleFavoriteStop} from './favorite-stops';
 import StopDetails from './StopDetails.jsx';
@@ -468,6 +470,10 @@ function SearchField({ label, value, onSelect, transit, routes }) {
 }
 
 export function App() {
+ const [recentIds,setRecentIds]=useState(()=>readRecent()),[recentError,setRecentError]=useState('');
+ function updateRecent(ids){try{setRecentIds(saveRecent(ids));setRecentError('');}catch{setRecentError('Modification impossible sur cet appareil. Réessayez.');}}
+ function selectDestination(point){changeTo(point);if(point&&transit.stops.some(s=>s.id===point.id))updateRecent(addRecent(recentIds,point,transit.stops));}
+
  const [favoriteStopIds,setFavoriteStopIds]=useState(()=>readFavoriteStops()),[favoriteStopError,setFavoriteStopError]=useState('');
  function toggleStop(id){try{setFavoriteStopIds(toggleFavoriteStop(favoriteStopIds,id));setFavoriteStopError('');}catch(e){setFavoriteStopError(e.message==='Vous pouvez enregistrer jusqu’à 12 quais.'?e.message:'Impossible d’enregistrer les arrêts sur cet appareil. Réessayez.');}}
 
@@ -1397,12 +1403,13 @@ export function App() {
 
           <div className="home-heading"><div><h1>On va oÃ¹ ?</h1></div><span className="home-symbol"><Footprints size={26}/></span></div>
 
-          <SearchField label="OÃ¹ allez-vous ?" value={to} onSelect={p=>{changeTo(p);if(p)setView('route');}} transit={transit.stops} routes={routes}/>
+          <SearchField label="OÃ¹ allez-vous ?" value={to} onSelect={p=>{selectDestination(p);if(p)setView('route');}} transit={transit.stops} routes={routes}/>
 
           <HomeFavorites refresh={modal} onLaunch={launchFavorite} onConfigure={()=>setModal('account')} renderSearch={props=><SearchField {...props} transit={transit.stops} routes={routes}/>} renderDialog={props=><Modal {...props}/>}/>
 
           <button className="resume-journey" onClick={()=>{setDetailStop(null);setModal('stop-details');}}><MapPin size={20}/>ArrÃªts et prochains passages</button>
           <FavoriteStops ids={favoriteStopIds} stops={transit.stops} error={favoriteStopError} onToggle={toggleStop} onOpen={stop=>{setDetailStop(stop);setModal('stop-details');}}/>
+          <RecentStops ids={recentIds} stops={transit.stops} error={recentError} onSelect={point=>{selectDestination(point);setView('route');}} onRemove={id=>updateRecent(recentIds.filter(x=>x!==id))} onClear={()=>updateRecent([])}/>
           <NearbyDepartures stops={transit.stops} routes={routes}/>
 
           {route ? <button className="resume-journey" onClick={()=>setView('route')}><Navigation size={20}/><span><strong>{to?.name}</strong><small>{Math.ceil(route.duration/60)} min Â· Reprendre lâ€™itinÃ©raire</small></span><ChevronRight size={18}/></button> : null}
@@ -1459,7 +1466,7 @@ export function App() {
 
                 value={to}
 
-                onSelect={changeTo}
+                onSelect={selectDestination}
 
                 transit={transit.stops}
 

@@ -14,6 +14,14 @@
 
 Passage combines pedestrian directions, public transport connections and short-lived community reports in one map-first interface. It focuses on Lille and its metropolitan area, with a shared web interface and Android wrapper. Navigation patterns take inspiration from familiar mapping applications; Passage is an independent prototype, unaffiliated with Waze, Google, Apple or IlÃ©via.
 
+## New: recent public destinations
+
+Reopen your last five selected public stops from home. Recent destinations stay on this device and can be removed individually or cleared together. Private addresses, raw search text and GPS positions are excluded.
+
+<img src="docs/screenshots/recent-stops.jpg" width="260" alt="Mobile home showing the recent public destination Loos Mairie, individual removal and clear-all controls" />
+
+Fresh 390 × 844 capture, October 22, 2026, with public demonstration data and a disposable database. Map © OpenStreetMap contributors; stops © Ilévia / MEL. [Behavior, privacy and verification](docs/recent-stops.md).
+
 ## New: favorite stops on home
 
 Save a physical platform from its detail card and reopen its departures in one tap from home. Remove it from either screen. Up to twelve stops are kept on this device, separately from favorite destinations, home and work.
