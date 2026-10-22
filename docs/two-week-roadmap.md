@@ -29,7 +29,7 @@ After verifying that the implementation commit is included in remote `main` and 
 | Oct 19 | Journey preferences | Save a preference for less walking or fewer transfers; explain the trade-off and preserve fastest-arrival comparison; use measured journey properties. | Completed Oct 19 |
 | Oct 20 | Stop details | Open a stop from the map/search; show served lines, direction-specific departures and a walking route to the selected physical platform. | Completed Oct 20 |
 | Oct 21 | Favorite stops | Save and remove frequently used stops; launch their departures directly from home; keep these distinct from favorite destinations. | Completed Oct 21 |
-| Oct 22 | Recent searches | Small device-local list of recent public destinations with remove/clear controls; no history sharing or automatic server upload. | Planned |
+| Oct 22 | Recent searches | Small device-local list of recent public destinations with remove/clear controls; no history sharing or automatic server upload. | Completed Oct 22 |
 | Oct 23 | Service freshness status | Compact status for timetable import age and realtime freshness; actionable retry and honest offline/provider-error states without stale live badges. | Planned |
 | Oct 24 | Share a journey summary | User-triggered share/copy of public stop names, line sequence and scheduled times; preview before sharing; exclude GPS coordinates, saved private addresses, tokens and account details. | Planned |
 | Oct 25 | Night display | Optional dark interface with accessible contrast and readable map overlays; persist preference and respect reduced motion; use only an appropriately licensed map style if needed. | Planned |
@@ -54,5 +54,7 @@ If a feature already exists, verify it and select the next unfinished item rathe
 | Oct 20, 2026 | Physical stop details and walking access | 70 tests, 4 hosting checks, production build; mobile physical-platform search, line switching, destination departures and walking-only route verified | [Stop details](screenshots/stop-details.jpg) | [49c2a70](https://github.com/Lockxii/passage/commit/49c2a70) |
 
 | Oct 21, 2026 | Favorite physical stops on home | 73 tests, 4 hosting checks, production build; mobile add, reload, departure shortcut and removal from both screens verified | [Favorite stops](screenshots/favorite-stops.jpg) | [8bad177](https://github.com/Lockxii/passage/commit/8bad177) |
+
+| Oct 22, 2026 | Recent public destinations | 76 tests, 4 hosting checks, production build; mobile selection, persistence, reopen, individual removal and clear-all verified | [Recent destinations](screenshots/recent-stops.jpg) | [2addacd](https://github.com/Lockxii/passage/commit/2addacd) |
 
 The October 13 delivery was started manually after the owner reported no result from the scheduled run. Available logs did not establish why the scheduled execution failed to produce work. The existing automation was re-registered for the thirteen remaining daily runs at 10:00 Europe/Paris, October 14–26. The October 14 heartbeat ran and delivered the signed-in reporting feature.
